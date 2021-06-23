@@ -1,9 +1,36 @@
-const socket = io.connect()
+let socket = io.connect()
 
 socket.on('productos', function (productos) {
     console.log('productos socket client')
     document.getElementById('datos').innerHTML = tabla(productos)
 })
+
+socket.on('messages', messages => {
+    render(messages)
+})
+
+function render(messages) {
+    let html = messages.map(e => {
+        return (`
+            <div>
+                <strong>${e.email}</strong>
+                <sup>[${e.date}]</sup>
+                <em>${e.text}</em>
+            </div>
+        `)
+    }).join(' ')
+    document.getElementById("messages").innerHTML = html
+}
+
+function addMessage (e) {
+    let message = {
+        email: document.getElementById('email').value,
+        date: new Date().toDateString(),
+        text: document.getElementById('text').value
+    }
+    socket.emit('nuevo-mensaje', message)
+    return false
+}
 
 const form = document.querySelector('form');
 
