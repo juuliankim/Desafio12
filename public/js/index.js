@@ -13,9 +13,9 @@ function render(messages) {
     let html = messages.map(e => {
         return (`
             <div>
-                <strong>${e.email}</strong>
-                <sup>[${e.date}]</sup>
-                <em>${e.text}</em>
+                <b style="color:blue;">${e.email}</b>
+                [<span style="color:brown;">${e.date}</span>]
+                <i style="color:green;">${e.text}</i>
             </div>
         `)
     }).join(' ')

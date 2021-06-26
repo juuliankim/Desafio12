@@ -29,9 +29,11 @@ io.on('connection', async socket => {
     socket.emit('productos', productos.listar())
     socket.emit('messages', chat.leerMensajes())
 
-    socket.on('new-message', message => {
+    socket.on('nuevo-mensaje', message => {
         // messages.push(data)
-        io.sockets.emit('messages', chat.guardarMensajes(message))
+        console.log(message)
+        chat.guardarMensajes(message)
+        io.sockets.emit('messages', chat.leerMensajes())
     })
     socket.on('update', data => {
         io.sockets.emit('productos', productos.listar())
