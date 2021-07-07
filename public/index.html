@@ -34,6 +34,14 @@
             <br>
             <div id="datos"></div>
         </div>
+        <h1>Centro de Mensajes</h1>
+        <form class="form-inline" onsubmit="return addMessage(this)">
+            <input type="email" class="form-control my-2 mr-2" placeholder="Email" id="email">
+            <input type="text" class="form-control my-2 mr-2" placeholder="Mensaje" id="text">
+            <input type="submit" class="btn btn-primary my-2" value="Enviar">
+        </form>
+        <div id='messages'></div>
+
     </div>
     <script src="js/index.js"></script>
 </body>

@@ -3,8 +3,8 @@ const handlebars = require('express-handlebars')
 const app = express();
 const http = require('http').Server(app)
 const productos = require('./api/productos')
-
 const io = require('socket.io')(http)
+const chat = require('./api/mensajes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
@@ -18,9 +18,23 @@ app.engine('hbs', handlebars({
 app.set('view engine', 'hbs');
 app.set('views','./views');
 
+let messages = [
+    { author: "Juan", text: "Hola como estan?"},
+    { author: "Pedro", text: "Muy bien! Y vos?"},
+    { author: "Ana", text: "Genial!"}
+]
+
 io.on('connection', async socket => {
     console.log('Nuevo cliente conectado')
     socket.emit('productos', productos.listar())
+    socket.emit('messages', chat.leerMensajes())
+
+    socket.on('nuevo-mensaje', message => {
+        // messages.push(data)
+        console.log(message)
+        chat.guardarMensajes(message)
+        io.sockets.emit('messages', chat.leerMensajes())
+    })
     socket.on('update', data => {
         io.sockets.emit('productos', productos.listar())
     })
