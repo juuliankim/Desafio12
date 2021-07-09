@@ -1,9 +1,13 @@
-const sqlite3 = {
-    client: 'sqlite3',
+const mysql = {
+    client: 'mysql',
     connection: {
-        filename: __dirname + '/../dataBase/mydb.sqlite'
+        host: '127.0.0.1',
+        user: 'root',
+        password: '',
+        database: 'productos',
+        port: '8080/'
     },
-    useNullAsDefault: true
+    pool: { min: 0, max: 10 }
 }
 
-module.exports = sqlite3;
+module.exports = mysql;

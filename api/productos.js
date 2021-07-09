@@ -1,50 +1,75 @@
+const options = require('../options/mariaDB')
+const knet = require('knew')(options)
+
 class Productos{
     constructor(){
-        this.productos = [];
+        this.productos = []
+        this.crearTabla()
+    }
+
+    crearTabla() {
+        knex.schema.createTable('productos', table => {
+            table.string('title')
+            table.integer('price')
+            table.string('thumbnail')
+            table.integer('id')
+        }).then(() => {
+            console.log('Tabla creada con exito')
+        }).catch(error => {
+            console.log('Error:', error)
+            throw error
+        })
     }
 
     listar(){        
-        return this.productos;
+        knex.from('productos').select('*')
+            .then(rows => {
+                for (row of rows) {
+                    console.log(`${row['title']} ${row['price']} ${row['thumbnail']} ${row['id']}`);
+                }
+                console.log(rows)
+            }).catch(error => {
+                console.log('Error:', error)
+            })
+        return this.productos
     }
 
     listarPorId(id){
-        let producto = this.productos.find(e => e.id === id);
+        let producto = this.productos.find(e => e.id === id)
         if(producto==undefined){
-            producto = 'Producto no encontrado';
+            producto = 'Producto no encontrado'
         }
-        return producto;
+        return producto
     }
 
-    guardar(producto){
-        const largo = this.productos.length;
-        this.productos.push({...producto,id:largo+1});
-        return this.productos[largo];
+    async guardar(producto){
+        try {
+            await knex('productos').insert(productos)
+        } catch(error) {
+            console.log(error)
+        }
+        const largo = this.productos.length
+        this.productos.push({...producto,id:largo+1})
+        return this.productos[largo]
     }
        
     borrar(id){
-        try {
-            const producto = this.productos.find(item => item.id == id);
-            this.productos = this.productos.filter(a => a.id != id);
-            return producto;
-        } catch (error) {
-            return [{
-                error: error
-            }];
-        }
+        knex.from('productos').where('id', '=', `${id}`).del()
+            .then(() => {
+                console.log('producto actualizado')
+            }).catch(error => {
+                console.log('Error:', error)
+            })
     }
 
     actualizar(id, producto){
-        try {
-            const indice = this.productos.findIndex(item => item.id == id);
-            this.productos[indice].title = producto.title;
-            this.productos[indice].price = producto.price;
-            this.productos[indice].thumbnail = producto.thumbnail;
-            return this.productos[indice];
-        } catch (error) {
-            return [{
-                error: error
-            }];
-        }
+        this.productos[id] = producto
+        knex.from('productos').where('id', '=', `${id}`).update(producto)
+            .then(() => {
+                console.log('producto actualizado')
+            }).catch(error => {
+                console.log('Error:', error)
+            })
     }
 }
 
