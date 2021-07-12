@@ -1,4 +1,4 @@
-const knex = require('../database/knex');
+const knex = require('../database/knexMensaje')
 
 class Mensaje {
 
@@ -6,21 +6,21 @@ class Mensaje {
 
     async guardar(mensaje) {
         try {
-            let resultado = await knex('mensajes').insert(mensaje);
-            return resultado;
+            let resultado = await knex('mensajes').insert(mensaje)
+            return resultado
         } catch (error) {
-            throw error;
+            throw error
         }
     }
 
     async buscar(condicion) {
         try {
-            let mensajes = await knex('mensajes').where(condicion);
-            return mensajes;
+            let mensajes = await knex('mensajes').where(condicion)
+            return mensajes
         } catch (error) {
-            throw error;
+            throw error
         }
     }
 }
 
-module.exports = new Mensaje();
+module.exports = new Mensaje()

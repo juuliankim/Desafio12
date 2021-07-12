@@ -1,76 +1,40 @@
-const options = require('../options/mariaDB')
-const knet = require('knew')(options)
+const Productos = require('../models/productos') 
 
-class Productos{
-    constructor(){
-        this.productos = []
-        this.crearTabla()
-    }
+class ApiProductos{
 
-    crearTabla() {
-        knex.schema.createTable('productos', table => {
-            table.string('title')
-            table.integer('price')
-            table.string('thumbnail')
-            table.integer('id')
-        }).then(() => {
-            console.log('Tabla creada con exito')
-        }).catch(error => {
-            console.log('Error:', error)
-            throw error
-        })
-    }
+    constructor() { }
 
-    listar(){        
-        knex.from('productos').select('*')
-            .then(rows => {
-                for (row of rows) {
-                    console.log(`${row['title']} ${row['price']} ${row['thumbnail']} ${row['id']}`);
-                }
-                console.log(rows)
-            }).catch(error => {
-                console.log('Error:', error)
-            })
-        return this.productos
-    }
-
-    listarPorId(id){
-        let producto = this.productos.find(e => e.id === id)
-        if(producto==undefined){
-            producto = 'Producto no encontrado'
-        }
-        return producto
-    }
-
-    async guardar(producto){
+    async guardar(productos) {
         try {
-            await knex('productos').insert(productos)
-        } catch(error) {
-            console.log(error)
+            return await Productos.guardar(productos)
+        } catch (error) {
+            throw error
         }
-        const largo = this.productos.length
-        this.productos.push({...producto,id:largo+1})
-        return this.productos[largo]
-    }
-       
-    borrar(id){
-        knex.from('productos').where('id', '=', `${id}`).del()
-            .then(() => {
-                console.log('producto actualizado')
-            }).catch(error => {
-                console.log('Error:', error)
-            })
     }
 
-    actualizar(id, producto){
-        this.productos[id] = producto
-        knex.from('productos').where('id', '=', `${id}`).update(producto)
-            .then(() => {
-                console.log('producto actualizado')
-            }).catch(error => {
-                console.log('Error:', error)
-            })
+    async buscar() {
+        try {
+            return await Productos.buscar()
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async borrar(condicion) {
+        try {
+            return await Productos.borrar(condicion)
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async actualizar(condicion, producto) {
+        try {
+            return await Productos.actualizar(condicion, producto)
+        } catch (error) {
+            throw error
+        }
     }
 }
 
-module.exports = new Productos();
+module.exports = new ApiProductos();
