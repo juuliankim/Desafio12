@@ -4,7 +4,7 @@ const controller = require('../api/productos')
 
 router.get('/productos/buscar', async (req, res) => {
     try {
-        let productos = await controlador.buscar(req.query)
+        let productos = await controller.buscar(req.query)
         res.send(productos)
     } catch (error) {
         res.status(500).send(error)
